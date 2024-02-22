@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from langchain_community.llms import openai
+# from langchain_community.llms import openai
 from langchain_openai import OpenAI, ChatOpenAI
 from langchain.prompts import PromptTemplate, ChatPromptTemplate
 from langchain.chains import LLMChain, SequentialChain
@@ -14,7 +14,7 @@ _ = load_dotenv(find_dotenv()) # read local .env file
 
 
 # App framework
-st.title('🦜🔗 Youtube GPT Creator')
+st.title('🦜🔗 Youtube Video Script Creator')
 prompt = st.text_input('Plug in your topic here')
 
 # Prompt templates
