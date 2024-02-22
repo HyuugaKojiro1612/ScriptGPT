@@ -1,6 +1,6 @@
 streamlit
 langchain
-langchain-openai -U
+langchain-openai
 openai
 wikipedia
 chromadb
