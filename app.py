@@ -1,32 +1,33 @@
 import os
-import openai
+import streamlit as st
+from langchain_community.llms import openai
+from langchain_openai import ChatOpenAI
+from langchain_openai import OpenAI
+from langchain.prompts import PromptTemplate, ChatPromptTemplate
+from langchain.chains import LLMChain
+
 
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv()) # read local .env file
-openai.api_key = os.environ['OPENAI_API_KEY']
 
 
-# account for deprecation of LLM model
-import datetime
-# Get the current date
-current_date = datetime.datetime.now().date()
+# App framework
+st.title('🦜🔗 Youtube GPT Creator')
+prompt = st.text_input('Plug in your prompt here')
 
-# Define the date after which the model should be set to "gpt-3.5-turbo"
-target_date = datetime.date(2024, 6, 12)
+# 
+template_string = '''Write a Youtube video title about {topic}.
+'''
+title_template = PromptTemplate.from_template(template_string)
+# title_template = ChatPromptTemplate.from_template(template_string)
 
-# Set the model variable based on the current date
-if current_date > target_date:
-    llm_model = "gpt-3.5-turbo"
-else:
-    llm_model = "gpt-3.5-turbo-0301"
-    
-def get_completion(prompt, model=llm_model):
-    messages = [{"role": "user", "content": prompt}]
-    response = openai.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0, 
-    )
-    return response.choices[0].message.content
+# LLM
+# llm = OpenAI(temperature=0.9)
+llm = ChatOpenAI(temperature=0.9, model="gpt-3.5-turbo-0125")
+title_chain = LLMChain(llm=llm, prompt=title_template, verbose=True)
 
-print(get_completion("What is 1+1?"))
+
+# Output rendering
+if prompt:
+    response = title_chain.run(prompt)
+    st.write(response)
